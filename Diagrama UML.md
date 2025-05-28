@@ -1,3 +1,4 @@
+```mermaid
 classDiagram
     class Juego {
         - vector<Heroe*> pool
