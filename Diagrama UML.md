@@ -22,18 +22,19 @@ classDiagram
         - int spd
         - int lck
         - Inventario inventario
-        + attack(Enemigo& objetivo)
+        + Heroe(const string&, int, int, int, int, int)
+        + attack(Enemigo&)
         + receiveDamage(int)
         + equipItem(Item*)
         + usePotion()
-        + getHP()
-        + getHPMax()
-        + getATK()
-        + getDEF()
-        + getSPD()
-        + getLCK()
-        + getNombre()
-        + getInventario()
+        + getHP() : int
+        + getHPMax() : int
+        + getATK() : int
+        + getDEF() : int
+        + getSPD() : int
+        + getLCK() : int
+        + getNombre() : string
+        + getInventario() : Inventario&
         + setHP(int)
         + setATK(int)
         + setDEF(int)
@@ -46,14 +47,19 @@ classDiagram
         - Arma* equippedWeapon
         - Armadura* equippedArmor
         - Accesorio* equippedAccessory
+        + Inventario()
+        + ~Inventario()
         + addItem(Item*)
         + removeItem(Item*)
-        + equipWeapon(Arma*)
-        + equipArmor(Armadura*)
-        + equipAccessory(Accesorio*)
+        + equipWeapon(Arma*) : bool
+        + equipArmor(Armadura*) : bool
+        + equipAccessory(Accesorio*) : bool
         + equipItem(Item*)
         + usePotion(Heroe&)
-        + getTotalWeight()
+        + getTotalWeight() : int
+        + getEquippedWeapon() : Arma*
+        + getEquippedArmor() : Armadura*
+        + getEquippedAccessory() : Accesorio*
     }
 
     class Item {
@@ -61,35 +67,40 @@ classDiagram
         - string nombre
         - int peso
         - int valor
-        + use(Heroe&)«virtual»
-        + getNombre()
-        + getWeight()
-        + getValue()
+        + Item(const string&, int, int)
+        + getNombre() : string
+        + getWeight() : int
+        + getValue() : int
+        + use() <<virtual>>
     }
 
     class Arma {
         - int minDamage
         - int maxDamage
-        + getMinDamage()
-        + getMaxDamage()
-        + use(Heroe&)
+        + Arma(const string&, int, int, int, int)
+        + getMinDamage() : int
+        + getMaxDamage() : int
+        + use()
     }
 
     class Armadura {
         - int armorClass
-        + getArmorClass()
-        + use(Heroe&)
+        + Armadura(const string&, int, int, int)
+        + getArmorClass() : int
+        + use()
     }
 
     class Accesorio {
         - int bonus
-        + getBonus()
-        + use(Heroe&)
+        + Accesorio(const string&, int, int, int)
+        + getBonus() : int
+        + use()
     }
 
     class Pocion {
         - int cureAmount
-        + getCureAmount()
+        + Pocion(const string&, int, int, int)
+        + getCureAmount() : int
         + use(Heroe&)
     }
 
@@ -101,66 +112,78 @@ classDiagram
         - int def
         - int spd
         - int lck
-        + attack(Heroe&)
+        + Enemigo(const string&, int, int, int, int, int)
+        + ~Enemigo()
+        + attack(Heroe&) <<virtual>>
         + receiveDamage(int)
-        + getHP()
-        + getNombre()
-        + getSPD()
+        + getHP() : int
+        + getNombre() : string
+        + getSPD() : int
     }
 
     class Soldado {
-        + attack(Heroe&)
+        + Soldado(const string&)
+        + attack(Heroe&) 
     }
 
     class MiniJefe {
-        + attack(Heroe&)
+        + MiniJefe(const string&)
+        + attack(Heroe&) 
     }
 
     class GranJefe {
-        + attack(Heroe&)
+        + GranJefe(const string&)
+        + attack(Heroe&) 
     }
 
     class Sala {
         - int numero
         - vector<Enemigo*> enemigos
         - Item* tesoro
+        + Sala(int)
+        + ~Sala()
         + agregarEnemigo(Enemigo*)
         + asignarTesoro(Item*)
-        + isCleared()
+        + isCleared() : bool
         + enter()
-        + getEnemigos()
-        + getTesoro()
-        + getNumero()
+        + getEnemigos() : const vector<Enemigo*>&
+        + getTesoro() : Item*
+        + getNumero() : int
     }
 
     class Mazmorra {
         - vector<Sala> rooms
         - int currentRoomIndex
-        + getCurrentRoom()
+        + Mazmorra()
+        + getCurrentRoom() : Sala*
         + nextRoom()
-        + isCleared()
+        + isCleared() : bool
         + reset()
-        + getLastCleared()
+        + getLastCleared() : int
     }
 
     class Combate {
         - vector<Heroe*> heroes
         - vector<Enemigo*> enemies
+        - calculateDamage(int, int) : int
         + startBattle(vector<Heroe*>&, vector<Enemigo*>&)
         + nextTurn()
-        + isBattleOver()
-        + victoria()
-        - calculateDamage(int,int)
+        + isBattleOver() : bool
+        + victoria() : bool
     }
 
-    %% Relationships
-    Juego o-- Heroe       : team
+    %% Relaciones
+    Juego o-- Heroe       : pool, team
     Juego o-- Mazmorra    : dungeon
     Juego o-- Combate     : combate
 
     Heroe *-- Inventario
 
     Inventario o-- Item
+    Inventario o-- Arma
+    Inventario o-- Armadura
+    Inventario o-- Accesorio
+    Inventario o-- Pocion
 
     Item <|-- Arma
     Item <|-- Armadura
