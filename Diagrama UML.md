@@ -63,7 +63,6 @@ classDiagram
     }
 
     class Item {
-        <<abstract>>
         - string nombre
         - int peso
         - int valor
@@ -105,7 +104,6 @@ classDiagram
     }
 
     class Enemigo {
-        <<abstract>>
         - string nombre
         - int hp
         - int atk
